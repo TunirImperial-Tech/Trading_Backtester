@@ -5,29 +5,6 @@ multiple trading strategies against risk-adjusted performance metrics (Sharpe ra
 drawdown, win rate), extending an IMC Prosperity trading result into a demoable,
 GitHub-ready project.
 
-**Status:** Phases 1–3 complete. Phase 4 (ML signal layer) and Phase 5 (polish/dashboard)
-in progress.
-
----
-
-## Project Structure
-
-```
-Backtester/
-├── data/
-│   └── prices.db              # SQLite database of historical OHLCV data
-├── src/
-│   ├── data_pipeline.py       # fetch/upsert script + get_prices() reader
-│   ├── strategies.py          # Strategy base class + concrete strategies
-│   ├── backtester.py          # Backtester engine (strategy-agnostic simulation loop)
-│   └── metrics.py             # Metrics class: Sharpe, drawdown, win rate, summary
-├── tests/
-│   └── test_backtester.py     # end-to-end checkpoint test (any strategy × any ticker)
-├── notebooks/
-│   └── exploration.ipynb      # equity curve / metrics visualization (in progress)
-└── README.md
-```
-
 ---
 
 ## Phase 1 — Data Pipeline
