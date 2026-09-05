@@ -51,6 +51,9 @@ def run_combo(strategy_name: str, ticker: str, params):
 
 st.sidebar.header("Backtest Settings")
 ticker = st.sidebar.selectbox("Ticker", get_tickers())
+initial_investment = st.sidebar.number_input(
+    "Initial Investment (£)", min_value=100, max_value=10000, step=100
+)
 
 STRATEGY_MAP = get_strategy_map()
 strategy_names = list(STRATEGY_MAP.keys())
@@ -77,11 +80,12 @@ elif strategy_name == "MeanReversion":
 price_df = get_price_df(ticker)
 backtester = Backtester(strategy)
 trades, equity = backtester.run(price_df)
+equity['portfolio_value'] = equity['value'] * initial_investment
 
 buys = trades[trades['to_position'] > trades['from_position']]
 sells = trades[trades['to_position'] < trades['from_position']]
 
-equity_indexed = equity.set_index('date')['value']
+equity_indexed = equity.set_index('date')['portfolio_value']
 
 buy_points = equity_indexed.loc[buys['date']]
 sell_points = equity_indexed.loc[sells['date']]
@@ -89,11 +93,12 @@ sell_points = equity_indexed.loc[sells['date']]
 metrics = Metrics(trades, equity)
 summary = metrics.summary(strategy_name, ticker)
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4, col5 = st.columns(5)
 col1.metric("Sharpe ratio",  f"{summary['sharpe_ratio']:.2f}")
 col2.metric("Max Drawdown", f"{summary['max_drawdown']:.1%}")
 col3.metric("Win rate", f"{summary['win_rate']:.1%}")
 col4.metric("Total returns", f"{summary['total_return']:.1%}")
+col5.metric("Final amount", f"£{equity['portfolio_value'].iloc[-1]:.2f}")
 
 fig = go.Figure()
 
@@ -147,9 +152,6 @@ if st.button("Run Comparision across all tickers"):
     display_df["sharpe_ratio"] = display_df["sharpe_ratio"].apply(lambda x: f"{x:.2f}")
 
     st.dataframe(display_df)
-
-st.write(f"Trades: {len(trades)}")
-st.write(equity.tail())
 
 
 

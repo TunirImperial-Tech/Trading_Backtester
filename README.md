@@ -114,7 +114,6 @@ A Streamlit app (`src/dashboard.py`) exposes the backtester interactively:
   re-running each combination.
 
   ![Cross-strategy comparison view](Screenshots/Comparison.png)
-  ![Comparison results table](Screenshots/Table.png)
 
 Run it with `make dashboard` or `streamlit run src/dashboard.py`.
 
