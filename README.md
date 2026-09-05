@@ -86,22 +86,37 @@ during a trending bull market.
 
 ---
 
-## Next Steps
+## Interactive Dashboard
 
-- **Phase 4 — ML Signal Layer:** train a classifier on engineered features to emit the
-  same `{-1, 0, 1}` signal, evaluated through the identical `Strategy` interface and
-  `Backtester`/`Metrics` pipeline used above.
-- **Phase 5 — Polish & Presentation:** a Streamlit dashboard for interactive
-  strategy/ticker comparison, `requirements.txt`, and a one-command setup so the repo is
-  runnable by a stranger from a fresh clone.
+A Streamlit app (`src/dashboard.py`) exposes the backtester interactively:
+
+- **Sidebar controls** — pick any ticker and strategy (strategy list is discovered
+  dynamically from `Strategy.__subclasses__()`, so new strategies show up automatically),
+  and tune strategy-specific parameters (fast/slow window for MA Crossover, rolling
+  window and z-score threshold for Mean Reversion).
+- **Live single-run view** — equity curve, drawdown chart, and Sharpe/max-drawdown/win-rate
+  metric cards all update immediately as sidebar values change.
+- **Trade markers on the equity curve** — buy and sell points are plotted directly on the
+  equity curve (green for buys, red for sells) using Plotly, so entries/exits are visible
+  in context rather than only in the raw trade log. The chart is fully interactive:
+  hover for exact date/value, zoom/pan, and click a series name in the legend to
+  show/hide that trace (e.g. hide "Sell" to declutter a high-frequency strategy like
+  Mean Reversion).
+- **Cross-strategy comparison view** — a button runs every strategy against every ticker
+  with a fixed set of default parameters and displays the resulting `summary()` metrics
+  side-by-side in one table, so strategies can be compared at a glance without manually
+  re-running each combination.
+
+Run it with `make dashboard` or `streamlit run src/dashboard.py`.
 
 ## Setup (current)
 
 ```bash
 python -m venv venv
 venv\Scripts\activate        # Windows
-pip install yfinance pandas numpy
+pip install -r requirements.txt
 
 python src/data_pipeline.py          # populate data/prices.db
 python -m tests.test_backtester      # run the end-to-end checkpoint
+streamlit run src/dashboard.py       # launch the interactive dashboard
 ```
