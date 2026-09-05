@@ -96,16 +96,25 @@ A Streamlit app (`src/dashboard.py`) exposes the backtester interactively:
   window and z-score threshold for Mean Reversion).
 - **Live single-run view** — equity curve, drawdown chart, and Sharpe/max-drawdown/win-rate
   metric cards all update immediately as sidebar values change.
+
+  ![Equity curve with trade markers](Screenshots/Equity.png)
+
 - **Trade markers on the equity curve** — buy and sell points are plotted directly on the
   equity curve (green for buys, red for sells) using Plotly, so entries/exits are visible
   in context rather than only in the raw trade log. The chart is fully interactive:
   hover for exact date/value, zoom/pan, and click a series name in the legend to
   show/hide that trace (e.g. hide "Sell" to declutter a high-frequency strategy like
   Mean Reversion).
+
+  ![Drawdown chart](Screenshots/Drawdown.png)
+
 - **Cross-strategy comparison view** — a button runs every strategy against every ticker
   with a fixed set of default parameters and displays the resulting `summary()` metrics
   side-by-side in one table, so strategies can be compared at a glance without manually
   re-running each combination.
+
+  ![Cross-strategy comparison view](Screenshots/Comparison.png)
+  ![Comparison results table](Screenshots/Table.png)
 
 Run it with `make dashboard` or `streamlit run src/dashboard.py`.
 
